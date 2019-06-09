@@ -1,0 +1,54 @@
+doc0 = "Данные материалы содержат некоторые рекомендации и соответствующий инструментарий (в форме кодов R) для выполнения статистического анализа и визуализации экспериментальных данных при проведении линейного и параллельного экспериментов в ВКР"
+
+doc1= "Данные материалы содержат некоторые рекомендации и соответствующий инструментарий (в форме кодов R) для выполнения статитического анализа и визуализации экспериментальных данных при проведении линейного и параллельного экспериментов в ВКР"
+
+doc2 = "Данны материалы содержат некоторые рекомендации и соответствующий инструментарий (в форме кодов R) д выполнения статистического анализа и визуализации экспериментальных данных при проведении линейного и параллельного экспериментов в ВКР"
+doc3 = "Данные мате содержат некоторые рекомендации и соответствующий инструментарий (в форме кодов R) для выполнения статиического анализа и визуализации экспериментальных данных при проведении линейного и параллельного экспериментов в ВКР"
+doc4 = "Данные материалы содержат некоторые рекомендации и соответствующий инструмент(в форме кодов R) для выполнения статистического анализа и визуализации экспериментальных данных при проведении линейного и параллельного экспериментов в ВКР"
+documents = [doc0, doc1, doc2, doc3,doc4]
+# Scikit Learn
+from sklearn.feature_extraction.text import CountVectorizer
+import pandas as pd
+from matplotlib import pyplot as plt
+
+# Create the Document Term Matrix
+count_vectorizer = CountVectorizer(stop_words='english')
+count_vectorizer = CountVectorizer()
+sparse_matrix = count_vectorizer.fit_transform(documents)
+
+# OPTIONAL: Convert Sparse Matrix to Pandas Dataframe if you want to see the word frequencies.
+doc_term_matrix = sparse_matrix.todense()
+df = pd.DataFrame(doc_term_matrix, 
+                  columns=count_vectorizer.get_feature_names(), 
+                  index=['doc0', 'doc1', 'doc2','doc3','doc4'])
+df
+# Compute Cosine Similarity
+from sklearn.metrics.pairwise import cosine_similarity
+print(cosine_similarity(df, df))
+cosin = cosine_similarity(df, df)
+import seaborn as sns;  sns.set()
+ax =  sns.heatmap(cosin)
+sns.heatmap(cosin, square=True, annot=True,  cbar=True)
+plt.show()
+distt = 1 - cosine_similarity(df, df)
+print(distt)
+
+ax =  sns.heatmap(distt)
+sns.heatmap(distt, square=True, annot=True,  cbar=True)
+
+
+# Calculate the distance between each sample
+# You have to think about the metric you use (how to measure similarity) + about the method of clusterization you use (How to group cars)
+import pandas as pd
+from matplotlib import pyplot as plt
+from scipy.cluster.hierarchy import dendrogram, linkage
+import numpy as np
+
+Z = linkage(distt, 'ward')
+# Make the dendrogram
+plt.title('Hierarchical Clustering Dendrogram')
+plt.xlabel('sample index')
+plt.ylabel('distance (Ward)')
+dendrogram(Z, labels=df.index, leaf_rotation=90)
+dendrogram(Z, labels=df.index, leaf_rotation=0)
+dendrogram(Z, labels=df.index)
